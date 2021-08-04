@@ -1,0 +1,42 @@
+<p><img src="images/r_album.png" alt="" /></p>
+<h2>r_album</h2>
+<p><a href="https://pub.dartlang.org/packages/r_album"><img src="https://img.shields.io/pub/v/r_album.svg" /></a></p>
+<p>Flutter 图片或者视频保存到相册插件，支持Android和IOS.
+<br>.----------------------------------------------
+<br>| <span style='margin-left:20px'>github地址:</span>
+<br>| <span style='margin-left:20px'><a href="https://github.com/rhymelph/r_album">https://github.com/rhymelph/r_album</a></span>
+<br>| <span style='margin-left:20px'>pub地址：</span>
+<br>| <span style='margin-left:20px'><a href="https://pub.dev/packages/r_album">https://pub.dev/packages/r_album</a></span>
+<br>`----------------------------------------------</p>
+<h2>如何使用</h2>
+<ul>
+<li>1.在<code>./pubspec.yaml</code>文件下添加插件</li>
+</ul>
+<pre><code class="language-dart">dependencies:
+  r_album: lastVersion
+
+</code></pre>
+<ul>
+<li>2.导入包</li>
+</ul>
+<pre><code class="language-dart">import 'package:r_album/r_album.dart';
+</code></pre>
+<ul>
+<li>3.创建专辑</li>
+</ul>
+<pre><code class="language-dart">await RAlbum.createAlbum("你的专辑名字");
+</code></pre>
+<ul>
+<li>4.将图片或视频添加到专辑中（添加后即可在系统相册中找到）</li>
+</ul>
+<pre><code class="language-dart">await RAlbum.saveAlbum("你的专辑名",["文件路径1","文件路径2",...]);
+</code></pre>
+<h2>end</h2>
+<ul>
+<li>
+<p>欢迎关注微信订阅号：<code>Dart客栈</code></p>
+</li>
+<li>
+<p>交流群：29380453</p>
+</li>
+</ul>

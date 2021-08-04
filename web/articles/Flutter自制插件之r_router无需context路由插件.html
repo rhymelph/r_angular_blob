@@ -1,0 +1,98 @@
+<p><img src="images/r_router.png" alt="" /></p>
+<h1>r_router</h1>
+<p><a href="https://pub.dartlang.org/packages/r_router"><img src="https://img.shields.io/pub/v/r_router.svg" alt="pub package" /></a></p>
+<p>一个无需使用context导航的Flutter路由插件，支持dialog
+<br>.----------------------------------------------
+<br>| <span style='margin-left:20px'>github地址:</span>
+<br>| <span style='margin-left:20px'><a href="https://github.com/rhymelph/r_router">https://github.com/rhymelph/r_router</a></span>
+<br>| <span style='margin-left:20px'>pub地址：</span>
+<br>| <span style='margin-left:20px'><a href="https://pub.dev/packages/r_router">https://pub.dev/packages/r_router</a></span>
+<br>`----------------------------------------------</p>
+<h2>1.开始使用.</h2>
+<ul>
+<li><code>pubspec.yaml</code>文件添加依赖</li>
+</ul>
+<pre><code class="language-yaml">dependencies:
+  r_router: last version
+</code></pre>
+<ul>
+<li>导入包</li>
+</ul>
+<pre><code class="language-dart">import 'package:r_router/r_router.dart';
+
+</code></pre>
+<h2>2.简单使用</h2>
+<ul>
+<li>注册路由</li>
+</ul>
+<pre><code class="language-dart">/// [path] 你的路由路径
+/// [routerWidgetBuilder] 构建你的页面
+/// [params] 你的参数，支持所有类型的值，类型为dynamic
+/// [PageOne] 你的部件
+RRouter.myRouter.addRouter(
+    path: '/one',
+    routerWidgetBuilder: (params) =&gt; PageOne(title:params["title"]),
+  );
+
+</code></pre>
+<ul>
+<li>添加你的路由到app</li>
+</ul>
+<pre><code class="language-dart">class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      // add new
+      onGenerateRoute: RRouter.myRouter.routerGenerate,
+      navigatorObservers: [
+        RRouter.myRouter.observer,
+      ],
+      // add new
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
+    );
+  }
+}
+
+</code></pre>
+<ul>
+<li>导航到注册的页面</li>
+</ul>
+<pre><code class="language-dart">    RRouter.myRouter.navigateTo('/one', arguments: {'title': 'hello world!'});
+</code></pre>
+<h2>3.注册路由</h2>
+<pre><code class="language-dart">
+/// 注册未找到页面的路由
+RRouter.myRouter.notFoundPage = (String path) =&gt; NoFoundPage(
+        path: path,
+      );
+
+/// 注册带过渡动画的路由，默认为根据对应平台的过渡动画,ios:CupertinoPageRoute,android:MaterialPageRoute
+RRouter.myRouter.addRouter(
+      path: '/three',
+      routerWidgetBuilder: (params) =&gt; PageThree(),
+      routerPageBuilder: (RouteSettings setting, WidgetBuilder builder) =&gt;
+          CupertinoPageRoute(builder: builder, settings: setting))
+</code></pre>
+<h2>4. 无需context的展示对话框方法</h2>
+<p>支持下面的方法</p>
+<ul>
+<li>showRDialog</li>
+<li>showRCupertinoDialog</li>
+<li>showRCupertinoModalPopup</li>
+<li>showRAboutDialog</li>
+<li>showRMenu</li>
+<li>showRTimePicker</li>
+<li>showRGeneralDialog</li>
+<li>showRDatePicker</li>
+<li>showRSearch</li>
+<li>showRModalBottomSheet</li>
+<li>showRLicensePage</li>
+</ul>
+<h2>5.默认的路由器</h2>
+<p>你可以使用下面代码进行路由跳转</p>
+<pre><code class="language-dart">RRouter.navigator
+</code></pre>

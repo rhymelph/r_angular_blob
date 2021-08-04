@@ -1,0 +1,25 @@
+
+@import 'package:angular_components/css/material/material';
+@import 'package:angular_components/material_list/mixins';
+
+:host{
+    align-content: center;
+    margin: 0 auto;
+}
+.file-list {
+  padding: 16px;
+  border: solid 1px rgb(224, 224, 224);
+  border-radius: 8px;
+  margin:16px;
+  overflow: hidden;
+  white-space:pre-wrap;
+  white-space:-moz-pre-wrap;
+  white-space:-pre-wrap;
+  white-space:-o-pre-wrap;
+  word-wrap:break-word;
+}
+h2{
+    margin-left: 18px;
+}
+
+@include inline-material-list(':not(.stretched-list)');

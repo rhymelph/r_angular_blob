@@ -1,0 +1,16 @@
+<div [class.article-content]="isMobel === false" [class.mobile-content]="isMobel">
+    <h2>
+        {{articleEntity?.title??''}}
+    </h2>
+    <div class="info">
+        <material-icon icon="date_range" baseline light *ngIf="articleEntity?.date != null"></material-icon>
+        <span class="article-subtitle" *ngIf="articleEntity?.date != null">{{articleEntity.date}}</span>
+        <space></space>
+        <material-icon icon="label" baseline light *ngIf="articleEntity?.tag != null && articleEntity.tag != ''"></material-icon>
+        <span class="article-subtitle" *ngIf="articleEntity?.tag != null">{{articleEntity.tag}}</span>
+    </div>
+    <div *ngIf="contentValue != null" [mysafeInnerHtml]="contentValue"></div>
+    <div  *ngIf="contentValue === null"  class="spinner-style">
+        <material-spinner ></material-spinner>
+    </div>
+</div>

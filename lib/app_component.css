@@ -1,0 +1,59 @@
+
+
+a:visited{
+    color: #fff;
+}
+
+a:hover{
+    text-decoration: underline;
+}
+a{
+    color: #fff;
+    text-decoration: none;
+}
+
+.avatar{
+    width: 100px;
+    height: 100px;
+    margin: 16px auto 16px auto;
+    align-content: center;
+}
+.avatar img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+}
+
+.chip-tag{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+  align-content: space-around;
+  position: relative;
+  vertical-align: top;
+  font-size: 12px;
+  margin-top: 16px;
+}
+
+.avatar-title{
+    text-align: center;
+    align-content: center;
+}
+
+.my-body{
+    overflow: hidden;
+    overflow-y: scroll;
+    width: 100%;
+    height: calc(100vh - 64px);
+    box-sizing: border-box;
+}
+
+.Header-link{
+    color: #fff;
+}
+.octicon{
+    fill: currentColor;
+}

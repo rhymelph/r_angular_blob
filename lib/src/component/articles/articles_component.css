@@ -1,0 +1,63 @@
+
+.main-article{
+    width: 720px;
+    margin: 16px auto;
+}   
+.mobile-article{
+    width: 100%;
+}
+.post{
+    padding: 16px;
+    border: solid 1px rgb(224, 224, 224);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+.article-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.article-title{
+    color: #000;
+    font-size: 1.5em;
+    text-decoration: none;
+    text-align: start;
+    margin-right: 16px;
+}
+.article-title:hover{
+    text-decoration: underline;
+}
+.article-image{
+    width: 100px;
+    height: 100px;
+    min-width: 120px;
+    display: block;
+    border-radius: 8px;
+}
+.article-contents{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+.article-foot p{
+    font-size: 0.9em;
+    color: grey;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+.article-subtitle{
+    margin-left: 6px;
+    font-size: 0.9em;
+    color: grey;
+}
+
+space{
+    width: 20px;
+    margin-left: 20px;
+}

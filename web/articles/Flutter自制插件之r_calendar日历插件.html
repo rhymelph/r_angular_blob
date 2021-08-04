@@ -1,0 +1,215 @@
+<p><img src="images/r_calendar.png" alt="" /></p>
+<h1>r_calendar</h1>
+<p><a href="https://pub.dartlang.org/packages/r_calendar"><img src="https://img.shields.io/pub/v/r_calendar.svg" alt="pub package" /></a></p>
+<p>📅📆Flutter日历插件，支持自定义日历，月视图/周视图切换、点击拦截、单选（切换月自动选）、多选（散选/聚选）
+<br>.----------------------------------------------
+<br>| <span style='margin-left:20px'>github地址:</span>
+<br>| <span style='margin-left:20px'><a href="https://github.com/rhymelph/r_calendar">https://github.com/rhymelph/r_calendar</a></span>
+<br>| <span style='margin-left:20px'>pub地址:</span>
+<br>| <span style='margin-left:20px'><a href="https://pub.dev/packages/r_calendar">https://pub.dev/packages/r_calendar</a></span>
+<br>| <span style='margin-left:20px'>apk体验：</span>
+<br>| <span style='margin-left:20px'><a href="https://fir.im/2aut">https://fir.im/2aut</a></span>
+<br>`----------------------------------------------</p>
+<ul>
+<li>[✔] 月视图/周视图切换</li>
+<li>[✔] 自定义日历</li>
+<li>[✔] 点击拦截</li>
+<li>[✔] 单选，切换月/周自动选</li>
+<li>[✔] 多选,散选/聚选</li>
+</ul>
+<h2>1.如何使用.</h2>
+<ul>
+<li><code>pubspec.yaml</code>文件添加依赖</li>
+</ul>
+<pre><code class="language-yaml">dependencies:
+    r_calendar: last version
+</code></pre>
+<ul>
+<li>导入包</li>
+</ul>
+<pre><code class="language-dart">import 'package:r_calendar/r_calendar.dart';
+
+</code></pre>
+<ul>
+<li>单选控制器初始化</li>
+</ul>
+<pre><code class="language-dart">///
+/// [selectedDate] 默认选中的那天
+/// [isAutoSelect] 当月份改变时，是否自动选中对应的月份的同一天
+
+    RCalendarController controller= RCalendarController.single(
+                    selectedDate: DateTime.now(),
+                    isAutoSelect: true,);
+</code></pre>
+<ul>
+<li>多选控制器初始化</li>
+</ul>
+<pre><code class="language-dart">///
+/// [selectedDates] 默认选中的日期数组
+/// [isDispersion] 是否散选，否则为连续选中
+
+    RCalendarController controller = RCalendarController.multiple(
+                    selectedDates: [
+                        DateTime(2019, 12, 1),
+                        DateTime(2019, 12, 2),
+                        DateTime(2019, 12, 3),
+                    ],
+                    isDispersion: true);
+</code></pre>
+<ul>
+<li>周视图/月视图（默认月视图）</li>
+</ul>
+<pre><code class="language-dart">///
+/// [mode] 模式
+/// -   RCalendarMode.week 周视图模式
+/// -   RCalendarMode.month 月视图模式
+
+    RCalendarController controller = RCalendarController.single(
+                    mode:RCalendarMode.week);
+</code></pre>
+<ul>
+<li>数据变化监听</li>
+</ul>
+<pre><code class="language-dart">/// 添加监听器观察值的变化
+    RCalendarController controller = RCalendarController.multiple(...)
+    ..addListener((){
+    // 是否为多选
+    // controller.isMultiple
+
+    // 单选下
+    // 当月份改变时，是否自动选中对应的月份的同一天
+    // controller.isAutoSelect
+    // 当前选中的日期
+    // controller.selectedDate;
+
+    // 多选
+    // 是否散选，否则为连续选中
+    // controller.isDispersion;
+    // 当前选中的日期列表
+    // controller.selectedDates;
+
+    // 周视图/月视图
+    // controller.mode
+    });
+</code></pre>
+<ul>
+<li>自定义日历</li>
+</ul>
+<pre><code class="language-dart">
+class MyRCalendarCustomWidget extends RCalendarCustomWidget {
+  // 如果你想设置第一天是星期一，请更改MaterialLocalizations 的firstDayOfWeekIndex
+  // 日 一 二 三 四 五 六
+  //构建头部
+  @override
+  List&lt;Widget&gt; buildWeekListWidget(BuildContext context,MaterialLocalizations localizations){...};
+
+  // 1 2 3 4 5 6 7
+  //构建普通的日期
+  @override
+  Widget buildDateTime(BuildContext context,DateTime time, List&lt;RCalendarType&gt; types){...};
+
+  //   &lt;  2019年 11月 &gt;
+  //构建年份和月份 左指示器、右指示器，返回null就没有
+  @override
+  Widget buildTopWidget(BuildContext context,RCalendarController controller){...};
+
+  //是否不可用,不可用时，无点击事件
+  @override
+  bool isUnable(DateTime time, bool isSameMonth){...};
+
+  //点击拦截，当返回true时进行拦截，就不会改变选中日期
+  @override
+  FutureOr&lt;bool&gt; clickInterceptor(BuildContext context,DateTime dateTime){...};
+
+  //子view的高度
+  @override
+  double get childHeight=&gt;{...};
+}
+</code></pre>
+<h2>2.使用它.</h2>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+import 'package:r_calendar/r_calendar.dart';
+
+void main() =&gt; runApp(MyApp());
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() =&gt; _MyHomePageState();
+}
+class _MyHomePageState extends State&lt;MyHomePage&gt; {
+  RCalendarController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = RCalendarController.multiple(selectedDates: [
+      DateTime(2019, 12, 1),
+      DateTime(2019, 12, 2),
+      DateTime(2019, 12, 3),
+    ]);
+//    controller = RCalendarController.single(selectedDate: DateTime.now(),isAutoSelect: true);
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: RCalendarWidget(
+               controller: controller,
+               customWidget: DefaultRCalendarCustomWidget(),
+               firstDate: DateTime(1970, 1, 1), //当前日历的最小日期
+               lastDate: DateTime(2055, 12, 31),//当前日历的最大日期
+             ),
+    );
+  }
+}
+
+</code></pre>
+<h2>3.自定义数据(请更新版本到 v0.1.6)</h2>
+<p>用户可以通过将数据设置到controller里面，然后再从<code>RCalendarCustomWidget</code>里获取</p>
+<pre><code class="language-dart">/// 初始化控制器，我这里是设置自定义数据的类型为List&lt;DateTime&gt;，当然，你可以设置成自己需要的类型
+/// 在构造方法中新增了一个`initialData`参数，用于初始化你的自定义数据
+    RCalendarController&lt;List&lt;DateTime&gt;&gt; controller =  RCalendarController.single(
+    initialData: [
+            DateTime.now(),
+            DateTime.now().add(Duration(days: 1)),
+            DateTime.now().add(Duration(days: 2)),
+          ]
+    );
+
+/// 如果你想更改自定义数据，请使用下面的例子，无需setState
+    controller.data = [....];
+
+/// 你可以在RCalendarCustomWidget自定义类中通过context获取对应的controller.然后根据自定义数据进行显示判断
+
+class MyRCalendarCustomWidget extends RCalendarCustomWidget {
+///...
+  @override
+  Widget buildDateTime(
+      BuildContext context, DateTime time, List&lt;RCalendarType&gt; types) {
+
+    // new
+    RCalendarController&lt;List&lt;DateTime&gt;&gt; controller =RCalendarMarker.of(context).notifier;
+    // new
+
+    //...
+   }
+///...
+</code></pre>

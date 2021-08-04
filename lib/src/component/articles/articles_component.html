@@ -1,0 +1,23 @@
+<div [class.main-article]="isMobel === false" [class.mobile-article]="isMobel">
+    <h2>{{currentTag}}</h2>
+    <article class="post" *ngFor="let article of articles">
+        <div class="article-header">
+            <div class="article-contents">
+                <a [routerLink]="navigateTo(article)" class="article-title">
+                    {{article.title}}
+                </a>
+                <div>
+                    <material-icon icon="date_range" baseline light></material-icon>
+                    <span class="article-subtitle">{{article.date}}</span>
+                    <space></space>
+                    <material-icon icon="label" baseline light></material-icon>
+                    <span class="article-subtitle">{{article.tag}}</span>
+                </div>
+            </div>
+            <img src="{{article.image}}" class="article-image" />
+        </div>
+        <div class="article-foot">
+            <p>{{article.introduce}}</p>
+        </div>
+    </article>
+</div>

@@ -1,0 +1,27 @@
+
+
+
+<div class="main-banner">
+    <h4>热门</h4>
+    <hr/>
+    <ul>
+        <li *ngFor='let link of links'>
+            
+            <a [routerLink]="navigateTo(link)">
+                <img src="images/hot.gif" *ngIf="link.hot === true"> {{link.title}}
+            </a>
+        </li>
+    </ul>
+</div>
+
+<div class="main-banner">
+    <h4>标签</h4>
+    <hr/>
+    <ul>
+        <li *ngFor='let tag of tags'>
+            <a [routerLink]="navigateToTag(tag)">
+                {{tag}}
+            </a>
+        </li>
+    </ul>
+</div>

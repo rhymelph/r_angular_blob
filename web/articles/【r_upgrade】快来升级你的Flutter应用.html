@@ -1,0 +1,237 @@
+<p><img src="https://user-gold-cdn.xitu.io/2020/6/12/172a70ba95520695?w=648&h=261&f=png&s=15189" alt="" /></p>
+<h2>介绍</h2>
+<p>在移动开发过程中，应用升级是必不可少的一个环节，所以，<a href="https://github.com/rhymelph/r_upgrade">r_upgrade</a>应用升级插件就出现了，这里先鼓掌欢迎👏👏，下面是使用介绍</p>
+<h1>r_upgrade</h1>
+<p><a href="https://pub.dartlang.org/packages/r_upgrade"><img src="https://img.shields.io/pub/v/r_upgrade.svg" alt="pub package" /></a></p>
+<p>Android和IOS的升级应用插件==Flutter应用升级插件</p>
+<ul>
+<li>网页链接形式升级</li>
+<li>apk下载形式升级<code>使用Service或者DownloadManager</code></li>
+<li>跳转到应用商店升级</li>
+<li><code>Android</code>热更新</li>
+<li><code>Android</code>增量升级</li>
+</ul>
+<h2>开始吧</h2>
+<h3>1.使用插件:</h3>
+<p>在<code>pubspec.yaml</code>文件添加下面代码</p>
+<pre><code class="language-yaml">dependencies:
+  r_upgrade: last version
+</code></pre>
+<h3>2.使用打开链接的方式进行更新（<code>Android</code>和<code>IOS</code>通用）</h3>
+<pre><code class="language-dart">    void upgradeFromUrl()async{
+        bool isSuccess =await RUpgrade.upgradeFromUrl(
+                    'https://www.baidu.com',
+                  );
+        print(isSuccess);
+    }
+</code></pre>
+<h2>Android平台</h2>
+<h3>1.跳转到应用商店升级</h3>
+<pre><code class="language-dart">    void upgradeFromAndroidStore(){
+       bool isSuccess = await RUpgrade.upgradeFromAndroidStore(AndroidStore.BAIDU);
+       print('${isSuccess?'跳转成功':'跳转失败'}');
+    }
+</code></pre>
+<h3>2.通过下载链接进行apk下载</h3>
+<blockquote>
+<p>注意，在Android应用中，请确保<code>AndroidManifest.xml</code>中声明以下权限，并在6.0系统上进行动态授权，不然会调用升级方法将抛出权限异常</p>
+</blockquote>
+<pre><code class="language-xml">    &lt;uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" /&gt;
+    &lt;uses-permission android:name="android.permission.INTERNET"/&gt;
+    &lt;uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/&gt;
+</code></pre>
+<h4>1.添加升级下载进度监听</h4>
+<pre><code class="language-dart">RUpgrade.stream.listen((DownloadInfo info){
+  ///...
+});
+</code></pre>
+<p>info 里包含的信息如下:</p><table><thead><tr><th>字段</th><th>含义</th></tr></thead><tbody><tr><td>(int) id</td><td>当前下载任务的id</td></tr><tr><td>(int) max_length</td><td>所需下载的总大小 (bytes)</td></tr><tr><td>(int) current_length</td><td>当前已下载的大小 (bytes)</td></tr><tr><td>(double) percent</td><td>当前下载进度(0-100)</td></tr><tr><td>(double) planTime</td><td>计划下载完成所需时间/秒 (需要.toStringAsFixed(0))</td></tr><tr><td>(String) path</td><td>当前下载的文件路径</td></tr><tr><td>(double) speed</td><td>当前下载的速度kb/s</td></tr><tr><td>(DownloadStatus) status</td><td>当前下载状态 <br> <code>STATUS_PAUSED</code> 下载已暂停 <br> <code>STATUS_PENDING</code>等待下载 <br> <code>STATUS_RUNNING</code>下载中 <br> <code>STATUS_SUCCESSFUL</code>下载成功 <br> <code>STATUS_FAILED</code>下载失败 <br> <code>STATUS_CANCEL</code>下载取消</td></tr></tbody></table>
+<p>注意： 部分http下载链接可能返回 <code>max_length = -1</code>，请自行判断</p>
+<h4>2.立即升级你的应用</h4>
+<p>目前分为两部分
+<code>useDownloadManager</code>:</p>
+<ul>
+<li><code>true</code>: 调用系统的<code>DownloadManager</code>进行下载
+<ul>
+<li>优势：接入简单，无需担心操作，下载全由系统管理</li>
+<li>劣势：无法使用http方式进行下载，无法在下载过程中点击通知栏进行暂停，无法根据有无网络进行暂停和继续下载，适配机型问题等</li>
+<li>支持的方法：<code>RUpgrade.stream</code>、<code>install</code>、<code>cancel</code></li>
+</ul>
+</li>
+<li><code>false</code>: 调用<code>Service</code>进行下载（默认使用）
+<ul>
+<li>优势：功能较全，支持http/https下载，支持网络断开后自动暂停下载，连接上后继续下载，支持断点续传，支持查询最后一次下载等</li>
+<li>劣势：暂无发现，如果发现bug欢迎提issue.</li>
+<li>支持的方法：默认全部</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-dart">    // [isAutoRequestInstall] 下载完成后自动弹出安装
+    // [apkName] 安装包的名字（需要包含.apk）
+    // [notificationVisibility] 通知栏显示方式
+    // [useDownloadManager] 是否使用DownloadManager，默认不使用（DownloadManager不支持http下载，下载手动暂停，断点续传等，不建议使用）
+    // [upgradeFlavor] 升级的口味，默认全量升级（默认）
+    void upgrade() async {
+      int id = await RUpgrade.upgrade(
+                 'https://raw.githubusercontent.com/rhymelph/r_upgrade/master/apk/app-release.apk',
+                 apkName: 'app-release.apk',isAutoRequestInstall: true);
+    }
+</code></pre>
+<p>新增升级的口味：(不支持使用DownloadManager下载)</p>
+<pre><code class="language-dart">enum RUpgradeFlavor {
+  normal, // 全量升级
+  hotUpgrade, // 热更新
+  incrementUpgrade, // 增量升级
+}
+</code></pre>
+<h4>3. 取消下载</h4>
+<pre><code class="language-dart">    void cancel() async {
+      bool isSuccess=await RUpgrade.cancel(id);
+    }
+</code></pre>
+<h4>4. 安装应用</h4>
+<pre><code class="language-dart">    void install() async {
+      bool isSuccess=await RUpgrade.install(id);
+    }
+</code></pre>
+<h4>5. 暂停下载</h4>
+<pre><code class="language-dart">    void pause() async {
+      bool isSuccess=await RUpgrade.pause(id);
+    }
+</code></pre>
+<h4>6. 继续下载</h4>
+<pre><code class="language-dart">    void pause() async {
+      bool isSuccess=await RUpgrade.upgradeWithId(id);
+      // 返回 false 即表示从来不存在此ID
+      // 返回 true
+      //    调用此方法前状态为 [STATUS_PAUSED]、[STATUS_FAILED]、[STATUS_CANCEL],将继续下载
+      //    调用此方法前状态为 [STATUS_RUNNING]、[STATUS_PENDING]，不会发生任何变化
+      //    调用此方法前状态为 [STATUS_SUCCESSFUL]，将会安装应用
+      // 当文件被删除时，重新下载
+    }
+</code></pre>
+<h4>7. 获取最后一次下载的ID</h4>
+<p>该方法只会寻找当前应用版本名和版本号下下载过的ID</p>
+<pre><code class="language-dart">    void getLastUpgradeId() async {
+     int id = await RUpgrade.getLastUpgradedId();
+    }
+</code></pre>
+<h4>8. 获取ID对应的下载状态</h4>
+<pre><code class="language-dart">    void getDownloadStatus()async{
+    DownloadStatus status = await RUpgrade.getDownloadStatus(id);
+   }
+</code></pre>
+<h4>9. 增量升级</h4>
+<ul>
+<li>1.下载<a href="https://github.com/rhymelph/r_upgrade/releases/download/v0.3.0/bsdiff">bsdiff</a>工具到本地</li>
+<li>2.准备两个安装包，一个是即将需要升级的安装包(old.apk)、一个是你需要更新的安装包（new.apk）</li>
+<li>3.在命令行切换到上面下载的<code>bsdiff</code>目录下，运行命令<code>./bsdiff old.apk new.apk increment.patch</code></li>
+<li>4.将上面生成的<code>increment.patch</code>上传到服务器</li>
+<li>5.调用<code>RUpgrade.upgrade（...,upgradeFlavor:RUpgradeFlavor.incrementUpgrade）</code>方法进行下载，即可</li>
+<li>6.调用<code>RUpgrade.install(id)</code>进行安装</li>
+</ul>
+<p>代码如下：</p>
+<pre><code class="language-dart">    int id;
+    void incrementUpgrade(){
+        id = await RUpgrade.upgrade(
+                'https://mydata-1252536312.cos.ap-guangzhou.myqcloud.com/r_upgrade.patch',
+                fileName: 'r_upgrade.patch',
+                useDownloadManager: false,
+                isAutoRequestInstall: false,
+                upgradeFlavor: RUpgradeFlavor.incrementUpgrade,
+              );
+    }
+
+    void install(){
+        try {
+            await RUpgrade.install(id);
+        } catch (e) {
+            _state.currentState
+                .showSnackBar(SnackBar(content: Text('增量更新失败!')));
+        }
+    }
+</code></pre>
+<h4>10. 热更新</h4>
+<ul>
+<li>你可以使用升级返回的<code>id</code>进行热更新，下载的文件需要将新版本生成的<code>isolate_snapshot_data</code>、<code>kernel_blob.bin</code>、<code>vm_snapshot_data</code>打进zip文件中下载
+步骤：
+<ul>
+<li>运行 <code>flutter clean</code> 清理build文件</li>
+<li>运行 <code>flutter build bundle</code> 生成需要的产物，下面标记星号为必须文件</li>
+</ul>
+</li>
+</ul>
+<pre><code>|- AssetManifest.json
+|- FontManifest.json
+|- fonts
+    |- ...
+|- isolate_snapshot_data *
+|- kernel-blob.bin       *
+|- LICENSE
+|- packages
+    |- ...
+|- vm_snapshot_data      *
+</code></pre>
+<pre><code>- 将标记星号的文件打包成zip文件，上传到服务器
+- 调用`RUpgrade.upgrade（...,upgradeFlavor:RUpgradeFlavor.hotUpgrade）`方法进行下载
+- 下载完成后，将上面获取到的id进行热更新,调用如下代码
+</code></pre>
+<pre><code class="language-dart">           bool isSuccess = await RUpgrade.install(id);
+           if (isSuccess) {
+              _state.currentState
+                    .showSnackBar(SnackBar(content: Text('热更新成功，3s后退出应用，请重新进入')));
+                Future.delayed(Duration(seconds: 3)).then((_){
+                  SystemNavigator.pop(animated: true);
+                });
+           }else{
+              _state.currentState
+                    .showSnackBar(SnackBar(content: Text('热更新失败，请等待更新包下载完成')));
+              }
+</code></pre>
+<pre><code>- 重启应用即可
+</code></pre>
+<blockquote>
+<p>注意：目前热更新尚处于测试阶段，只支持Flutter代码的变更，不支持资源文件等，热更新造成的一切的后果插件的作者概不负责，由使用者承担。</p>
+</blockquote>
+<h2>安卓平台通知栏</h2>
+<p>如果你想自定义通知栏显示的内容, 可以这样做, 修改或添加文件路径为<code>project/android/app/main/res/r_upgrade_value.xml</code>，添加下面代码</p>
+<pre><code class="language-xml">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;resources&gt;
+    &lt;string name="r_upgrade_download_speech"&gt;%.2fkb/s&lt;/string&gt;
+    &lt;string name="r_upgrade_download_planTime"&gt;预计%.0f秒后完成&lt;/string&gt;
+    &lt;string name="r_upgrade_download_finish"&gt;下载完成&lt;/string&gt;
+    &lt;string name="r_upgrade_download_paused"&gt;下载被暂停&lt;/string&gt;
+    &lt;string name="r_upgrade_download_failed"&gt;下载失败&lt;/string&gt;
+&lt;/resources&gt;
+</code></pre>
+<p>然后.当你使用<code>upgrade</code>方法时,你应该设置参数<code>notificationStyle</code>，默认为显示预计完成时间.</p>
+<pre><code class="language-dart">/// Notification show style about content text
+enum NotificationStyle {
+  speechAndPlanTime, // 100kb/s 预计1秒后完成
+  planTimeAndSpeech, // 预计1秒后完成 100kb/s
+  speech,// 100kb/s
+  planTime, // 预计1秒后完成
+  none, //
+}
+</code></pre>
+<h2>IOS平台</h2>
+<h3>1.跳转到AppStore进行更新</h3>
+<pre><code class="language-dart">    void upgradeFromAppStore() async {
+        bool isSuccess =await RUpgrade.upgradeFromAppStore(
+                '您的AppId',//例如:微信的AppId:414478124
+              );
+        print(isSuccess);
+    }
+</code></pre>
+<h3>2.获取AppStore中你的应用最后的版本名</h3>
+<pre><code class="language-dart">    void getVersionFromAppStore() async {
+        String versionName = await RUpgrade.getVersionFromAppStore(
+                '您的AppId',//例如:微信的AppId:414478124
+               );
+        print(versionName);
+    }
+</code></pre>
+<blockquote>
+<p>结尾：Dart客栈已经推出<code>Aqueduct框架系列教程</code>专辑，欢迎喜欢学习Dart语言开发的小伙伴关注👏👏</p>
+</blockquote>
+<p><img src="https://user-gold-cdn.xitu.io/2020/6/12/172a7121edeecc29?w=1280&h=1280&f=png&s=523911" alt="" /></p>

@@ -1,0 +1,54 @@
+.article-content{
+    margin: 32px auto 32px auto;
+    align-content: center;
+    max-width: 720px;
+    display: block;
+    padding: 16px;
+    border: solid 1px rgb(224, 224, 224);
+    border-radius: 8px;
+}
+.mobile-content{
+    margin: 32px auto auto auto;
+    width: 100%;
+    padding: 8px;
+}
+
+h2{
+    text-align: center;
+    align-content: center;
+}
+.info{
+    align-content: center;
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: solid 1px rgb(224, 224, 224);
+}
+space{
+    width: 20px;
+    margin-left: 20px;
+}
+.article-subtitle{
+    margin-left: 6px;
+    font-size: 0.9em;
+    color: grey;
+}
+
+div a{
+    color: black;
+    text-decoration: none;
+}
+
+div a:visited{
+    color: black;
+    text-decoration: none;
+}
+div a:hover{
+    color: black;
+    text-decoration: underline;
+}
+
+.spinner-style{
+    width: auto;
+    height: 300px;
+    padding-top: 200px;
+}

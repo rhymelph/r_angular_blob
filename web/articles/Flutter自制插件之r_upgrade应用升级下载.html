@@ -1,0 +1,84 @@
+<p><img src="images/r_upgrade.png" alt="" /></p>
+<h2>介绍</h2>
+<p>在移动开发过程中，应用升级是必不可少的一个环节，所以，<a href="https://github.com/rhymelph/r_upgrade">r_upgrade</a>应用升级插件就出现了，这里先鼓掌欢迎👏👏，下面是使用介绍</p>
+<h2>r_upgrade</h2>
+<p><img src="https://img.shields.io/pub/v/r_upgrade.svg" alt="版本号" /></p>
+<p>Android和IOS的升级应用插件==Flutter应用升级插件</p>
+<h2>开始吧</h2>
+<ul>
+<li>使用插件:</li>
+</ul>
+<p>在<code>pubspec.yaml</code>文件添加下面代码</p>
+<pre><code class="language-yaml">dependencies:
+  r_upgrade: last version
+</code></pre>
+<ul>
+<li>添加升级监听</li>
+</ul>
+<pre><code class="language-dart">RUpgrade.stream.listen((info){
+  ///...
+});
+</code></pre>
+<p>info 里面包含的信息如下:</p>
+<p><code>total</code> 应用总大小,bytes值</p>
+<p><code>status</code> 应用的下载状态：</p>
+<pre><code>`STATUS_PAUSED`下载被暂停
+
+`STATUS_PENDING`等待下载
+
+`STATUS_RUNNING`下载中
+
+`STATUS_SUCCESSFUL`下载成功
+
+`STATUS_FAILED`下载失败
+
+</code></pre>
+<p><code>progress</code> 已下载的大小bytes值</p>
+<p><code>planTime</code> 计划下载完成所需时间/秒</p>
+<p><code>address</code> 下载到本地的地址路径</p>
+<p><code>percent</code> 下载进度 范围<code>0-100</code></p>
+<p><code>id</code> 当前下载任务的id</p>
+<p><code>speed</code> 当前下载速度kb/s</p>
+<ul>
+<li>立即升级你的应用</li>
+</ul>
+<pre><code class="language-dart">    void upgrade() async {
+      int id = await RUpgrade.upgrade(
+                 'https://raw.githubusercontent.com/rhymelph/r_upgrade/master/apk/app-release.apk',
+                 apkName: 'app-release.apk');
+    }
+</code></pre>
+<ul>
+<li>你可以使用升级返回的<code>id</code>进行取消下载</li>
+</ul>
+<pre><code class="language-dart">    void cancel() async {
+      bool isSuccess=await RUpgrade.cancel(id);
+    }
+</code></pre>
+<ul>
+<li>你可以使用升级返回的<code>id</code>进行安装</li>
+</ul>
+<pre><code class="language-dart">    void install() async {
+      bool isSuccess=await RUpgrade.install(id);
+    }
+</code></pre>
+<ul>
+<li>如果你的应用为IOS，使用此方法跳转到appStore进行下载更新</li>
+</ul>
+<pre><code class="language-dart">    void iosUpgrade(String url)async{
+      RUpgrade.appStore(url);
+    }
+</code></pre>
+<blockquote>
+<p>注意，在Android应用中，请确保<code>AndroidManifest.xml</code>中声明以下权限，并在6.0系统上进行动态授权，不然会调用升级方法将抛出权限异常</p>
+</blockquote>
+<pre><code class="language-xml">    &lt;uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" /&gt;
+    &lt;uses-permission android:name="android.permission.INTERNET"/&gt;
+    &lt;uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/&gt;
+</code></pre>
+<h2>未来计划</h2>
+<ul>
+<li>Android平台添加热更新</li>
+<li>添加暂停，继续功能</li>
+<li>未想好。。。（欢迎评论）</li>
+</ul>

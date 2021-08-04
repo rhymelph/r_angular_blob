@@ -1,0 +1,15 @@
+<section class="stretched-list">
+    <material-list class="file-list">
+        <div *ngFor="let map of fileMap" group >
+            <material-list-item disabled>
+                {{map.key}}
+            </material-list-item>
+            <material-list-item *ngFor="let entity of map.value" (trigger)="onSelect(entity)">
+                {{entity.title}}
+                <span class="material-list-item-secondary">
+                    {{entity.date}}
+                  </span>
+            </material-list-item>
+        </div>
+    </material-list>
+</section>
